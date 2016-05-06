@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "request": "registry:npm/request#2.69.0+20160428223725"
+  },
+  "ambientDependencies": {
+    "node": "registry:dt/node#4.0.0+20160505172921"
+  }
+}
