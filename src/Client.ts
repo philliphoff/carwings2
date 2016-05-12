@@ -2,6 +2,8 @@ import { Api } from './Api';
 import { IVehicle } from './IVehicle';
 
 export class Client {
+    private static RESULT_POLLING_INTERVAL = 20000;
+
     private _customSessionId: string;
     private _dcmId: string;
     private _gdcUserId: string;
@@ -76,21 +78,36 @@ export class Client {
                     return callback(new Error('Response did not include response key.'));
                 }
 
-                Api.requestStatusResult(
-                    that._regionCode,
-                    that._locale,
-                    that._customSessionId,
-                    that._dcmId,
-                    vin,
-                    that._timeZone,
-                    resultKey,
-                    (resultErr, resultResponse) => {
-                        if (resultErr) {
-                            return callback(resultErr);
-                        }
+                const onTimer = () => {
+                    Api.requestStatusResult(
+                        that._regionCode,
+                        that._locale,
+                        that._customSessionId,
+                        that._dcmId,
+                        vin,
+                        that._timeZone,
+                        resultKey,
+                        (resultErr, resultResponse) => {
+                            if (resultErr) {
+                                return callback(resultErr);
+                            }
 
-                        callback(undefined, resultResponse);
-                    });
+                            const responseFlag = resultResponse.responseFlag;
+
+                            if (!responseFlag) {
+                                return callback(new Error('Response did not include response flag.'));
+                            }
+
+                            if (responseFlag === '0') {
+                                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+                            }
+                            else {
+                                callback(undefined, resultResponse);
+                            }
+                        });
+                };
+
+                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
             });
     }
 
@@ -218,6 +235,6 @@ export class Client {
             gdcUserId: gdcUserId,
             dcmId: dcmId,
             vin: vin
-        }
+        };
     }
 }

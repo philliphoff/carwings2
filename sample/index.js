@@ -19,6 +19,6 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
             return statusErr;
         }
         
-        console.log(response);
+        console.log(statusResponse);
     });
 });
