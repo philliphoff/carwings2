@@ -1,13 +1,7 @@
 import { Api } from './Api';
 import { IVehicle } from './IVehicle';
 
-import * as crypto from 'crypto';
-import * as request from 'request';
-
 export class Client {
-    private static BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/gworchest_0307C/gdc';
-    private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
-
     private _customSessionId: string;
     private _dcmId: string;
     private _gdcUserId: string;
@@ -48,61 +42,39 @@ export class Client {
                     return callback(connectErr);
                 }
 
-                const encryptedPassword = Client.encryptPassword(password, passwordEncryptionKey);
+                Api.login(
+                    that._regionCode,
+                    that._locale,
+                    userId,
+                    password,
+                    passwordEncryptionKey,
+                    (err, response) => {
+                        if (err) {
+                            return callback(err);
+                        }
 
-                request.post({
-                    url: Client.BASE_ENDPOINT + '/UserLoginRequest.php',
-                    form: {
-                        'RegionCode': that._regionCode,
-                        'lg': that._locale,
-                        'UserId': userId,
-                        'Password': encryptedPassword,
-                        'initial_app_strings': Client.INITIAL_APP_STRINGS
-                    }
-                },
-                (err, response, body) => {
-                    if (err) {
-                        return callback(err);
-                    }
+                        that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response);
 
-                    if (response.statusCode !== 200) {
-                        return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-                    }
+                        const customerInfo = Client.extractCustomerInfo(response);
 
-                    const parsedBody = JSON.parse(body);
+                        that._timeZone = customerInfo.timeZone;
 
-                    that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(parsedBody);
+                        const vehicleInfo = Client.extractVehicleInfo(response);
 
-                    const customerInfo = Client.extractCustomerInfo(parsedBody);
+                        that._dcmId = vehicleInfo.dcmId;
+                        that._gdcUserId = vehicleInfo.gdcUserId;
 
-                    that._timeZone = customerInfo.timeZone;
-
-                    const vehicleInfo = Client.extractVehicleInfo(parsedBody);
-
-                    that._dcmId = vehicleInfo.dcmId;
-                    that._gdcUserId = vehicleInfo.gdcUserId;
-
-                    callback(
-                        undefined,
-                        {
-                            vin: vehicleInfo.vin
-                       });
-                });
+                        callback(
+                            undefined,
+                            {
+                                vin: vehicleInfo.vin
+                        });
+                    });
             });
     }
 
     public requestStatus(vin: string, callback: (err?: Error, status?: Object) => void): void {
         // No-op.
-    }
-
-    private static encryptPassword(password: string, passwordEncryptionKey: string) {
-        const cipher = crypto.createCipheriv('bf-ecb', new Buffer(passwordEncryptionKey), new Buffer(''));
-
-        let encrypted = cipher.update(password, 'utf8', 'base64');
-
-        encrypted += cipher.final('base64');
-
-        return encrypted;
     }
 
     private static extractCustomSessionIdFromLoginResponse(response): string {
