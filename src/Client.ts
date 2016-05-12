@@ -1,11 +1,8 @@
+import { Api } from './Api';
 import { IVehicle } from './IVehicle';
 
-import * as crypto from 'crypto';
-import * as request from 'request';
-
 export class Client {
-    private static BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/gworchest_0307C/gdc';
-    private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
+    private static RESULT_POLLING_INTERVAL = 20000;
 
     private _customSessionId: string;
     private _dcmId: string;
@@ -14,38 +11,9 @@ export class Client {
     private _regionCode: string;
     private _timeZone: string;
 
-    public constructor(regionCode?: string, locale?: string) {
+    constructor(regionCode?: string, locale?: string) {
         this._regionCode = regionCode || 'NNA'; // Default to North America
         this._locale = locale || 'en-US';       // Default to English (US)
-    }
-
-    public connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
-        request.post({
-            url: Client.BASE_ENDPOINT + '/InitialApp.php',
-            form: {
-                'RegionCode': this._regionCode,
-                'lg': this._locale,
-                'initial_app_strings': Client.INITIAL_APP_STRINGS
-            }
-        },
-        (err, response, body) => {
-            if (err) {
-                return callback(err);
-            }
-
-            if (response.statusCode !== 200) {
-                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-            }
-
-            const parsedBody = JSON.parse(body);
-            const passwordEncryptionKey = parsedBody.baseprm;
-
-            if (!passwordEncryptionKey) {
-                return callback(new Error('Response did not include password encryption key.'));
-            }
-
-            return callback(undefined, passwordEncryptionKey);
-        });
     }
 
     public login(userId: string, password: string, callback: (err?: Error, vehicle?: IVehicle) => void): void {
@@ -57,61 +25,109 @@ export class Client {
                     return callback(connectErr);
                 }
 
-                const encryptedPassword = Client.encryptPassword(password, passwordEncryptionKey);
+                Api.login(
+                    that._regionCode,
+                    that._locale,
+                    userId,
+                    password,
+                    passwordEncryptionKey,
+                    (err, response) => {
+                        if (err) {
+                            return callback(err);
+                        }
 
-                request.post({
-                    url: Client.BASE_ENDPOINT + '/UserLoginRequest.php',
-                    form: {
-                        'RegionCode': that._regionCode,
-                        'lg': that._locale,
-                        'UserId': userId,
-                        'Password': encryptedPassword,
-                        'initial_app_strings': Client.INITIAL_APP_STRINGS
-                    }
-                },
-                (err, response, body) => {
-                    if (err) {
-                        return callback(err);
-                    }
+                        that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response);
 
-                    if (response.statusCode !== 200) {
-                        return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-                    }
+                        const customerInfo = Client.extractCustomerInfo(response);
 
-                    const parsedBody = JSON.parse(body);
+                        that._timeZone = customerInfo.timeZone;
 
-                    that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(parsedBody);
+                        const vehicleInfo = Client.extractVehicleInfo(response);
 
-                    const customerInfo = Client.extractCustomerInfo(parsedBody);
+                        that._dcmId = vehicleInfo.dcmId;
+                        that._gdcUserId = vehicleInfo.gdcUserId;
 
-                    that._timeZone = customerInfo.timeZone;
-
-                    const vehicleInfo = Client.extractVehicleInfo(parsedBody);
-
-                    that._dcmId = vehicleInfo.dcmId;
-                    that._gdcUserId = vehicleInfo.gdcUserId;
-
-                    callback(
-                        undefined,
-                        {
-                            vin: vehicleInfo.vin
-                       });
-                });
+                        callback(
+                            undefined,
+                            {
+                                vin: vehicleInfo.vin
+                        });
+                    });
             });
     }
 
-    public requestStatus(vin: string, callback: (err?: Error, status?: Object) => void): void {
-        // No-op.
+    public requestStatus(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestStatus(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                const resultKey = response.resultKey;
+
+                if (!resultKey) {
+                    return callback(new Error('Response did not include response key.'));
+                }
+
+                const onTimer = () => {
+                    Api.requestStatusResult(
+                        that._regionCode,
+                        that._locale,
+                        that._customSessionId,
+                        that._dcmId,
+                        vin,
+                        that._timeZone,
+                        resultKey,
+                        (resultErr, resultResponse) => {
+                            if (resultErr) {
+                                return callback(resultErr);
+                            }
+
+                            const responseFlag = resultResponse.responseFlag;
+
+                            if (!responseFlag) {
+                                return callback(new Error('Response did not include response flag.'));
+                            }
+
+                            if (responseFlag === '0') {
+                                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+                            }
+                            else {
+                                callback(undefined, resultResponse);
+                            }
+                        });
+                };
+
+                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+            });
     }
 
-    private static encryptPassword(password: string, passwordEncryptionKey: string) {
-        const cipher = crypto.createCipheriv('bf-ecb', new Buffer(passwordEncryptionKey), new Buffer(''));
+    private connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
+        Api.connect(
+            this._regionCode,
+            this._locale,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
 
-        let encrypted = cipher.update(password, 'utf8', 'base64');
+                const passwordEncryptionKey = response.baseprm;
 
-        encrypted += cipher.final('base64');
+                if (!passwordEncryptionKey) {
+                    return callback(new Error('Response did not include password encryption key.'));
+                }
 
-        return encrypted;
+                return callback(undefined, passwordEncryptionKey);
+            });
     }
 
     private static extractCustomSessionIdFromLoginResponse(response): string {
@@ -219,6 +235,6 @@ export class Client {
             gdcUserId: gdcUserId,
             dcmId: dcmId,
             vin: vin
-        }
+        };
     }
 }
