@@ -12,9 +12,9 @@ export class Api {
         request.post({
             url: Api.BASE_ENDPOINT + '/InitialApp.php',
             form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
-                'lg': locale,
-                'initial_app_strings': Api.INITIAL_APP_STRINGS
+                'lg': locale
             }
         },
         (err, response, body) => {
@@ -45,11 +45,48 @@ export class Api {
         request.post({
             url: Api.BASE_ENDPOINT + '/UserLoginRequest.php',
             form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
                 'lg': locale,
                 'UserId': userId,
-                'Password': encryptedPassword,
-                'initial_app_strings': Api.INITIAL_APP_STRINGS
+                'Password': encryptedPassword
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestStatus(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        gdcUserId: string,
+        vin: string,
+        timeZone: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/BatteryStatusCheckRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'UserId': gdcUserId,
+                'VIN': vin,
+                'tz': timeZone
             }
         },
         (err, response, body) => {

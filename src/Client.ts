@@ -9,28 +9,9 @@ export class Client {
     private _regionCode: string;
     private _timeZone: string;
 
-    public constructor(regionCode?: string, locale?: string) {
+    constructor(regionCode?: string, locale?: string) {
         this._regionCode = regionCode || 'NNA'; // Default to North America
         this._locale = locale || 'en-US';       // Default to English (US)
-    }
-
-    public connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
-        Api.connect(
-            this._regionCode,
-            this._locale,
-            (err, response) => {
-                if (err) {
-                    return callback(err);
-                }
-
-                const passwordEncryptionKey = response.baseprm;
-
-                if (!passwordEncryptionKey) {
-                    return callback(new Error('Response did not include password encryption key.'));
-                }
-
-                return callback(undefined, passwordEncryptionKey);
-            });
     }
 
     public login(userId: string, password: string, callback: (err?: Error, vehicle?: IVehicle) => void): void {
@@ -73,8 +54,41 @@ export class Client {
             });
     }
 
-    public requestStatus(vin: string, callback: (err?: Error, status?: Object) => void): void {
-        // No-op.
+    public requestStatus(vin: string, callback: (err?: Error, status?) => void): void {
+        Api.requestStatus(
+            this._regionCode,
+            this._locale,
+            this._customSessionId,
+            this._dcmId,
+            this._gdcUserId,
+            vin,
+            this._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(undefined, response);
+            });
+    }
+
+    private connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
+        Api.connect(
+            this._regionCode,
+            this._locale,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                const passwordEncryptionKey = response.baseprm;
+
+                if (!passwordEncryptionKey) {
+                    return callback(new Error('Response did not include password encryption key.'));
+                }
+
+                return callback(undefined, passwordEncryptionKey);
+            });
     }
 
     private static extractCustomSessionIdFromLoginResponse(response): string {

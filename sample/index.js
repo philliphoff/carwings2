@@ -12,5 +12,13 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
         return err;
     }
     
-    console.log(vehicle);
+    client.requestStatus(vehicle.vin, (statusErr, statusResponse) => {
+        if (statusErr) {
+            console.error(statusErr);
+            
+            return statusErr;
+        }
+        
+        console.log(response);
+    });
 });
