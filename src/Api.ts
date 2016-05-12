@@ -104,6 +104,43 @@ export class Api {
         });
     }
 
+    public static requestStatusResult(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        vin: string,
+        timeZone: string,
+        resultKey: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/BatteryStatusCheckResultRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'VIN': vin,
+                'tz': timeZone,
+                'resultKey': resultKey
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
     private static encryptPassword(password: string, passwordEncryptionKey: string) {
         const cipher = crypto.createCipheriv('bf-ecb', new Buffer(passwordEncryptionKey), new Buffer(''));
 

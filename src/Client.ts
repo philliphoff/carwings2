@@ -55,20 +55,42 @@ export class Client {
     }
 
     public requestStatus(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
         Api.requestStatus(
-            this._regionCode,
-            this._locale,
-            this._customSessionId,
-            this._dcmId,
-            this._gdcUserId,
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
             vin,
-            this._timeZone,
+            that._timeZone,
             (err, response) => {
                 if (err) {
                     return callback(err);
                 }
 
-                callback(undefined, response);
+                const resultKey = response.resultKey;
+
+                if (!resultKey) {
+                    return callback(new Error('Response did not include response key.'));
+                }
+
+                Api.requestStatusResult(
+                    that._regionCode,
+                    that._locale,
+                    that._customSessionId,
+                    that._dcmId,
+                    vin,
+                    that._timeZone,
+                    resultKey,
+                    (resultErr, resultResponse) => {
+                        if (resultErr) {
+                            return callback(resultErr);
+                        }
+
+                        callback(undefined, resultResponse);
+                    });
             });
     }
 
