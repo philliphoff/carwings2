@@ -3,12 +3,14 @@
 const carwings = require('../release');
 const secrets = require('./secrets.json');
 
-carwings.Client.login(secrets.email, secrets.password, err => {
+const client = new carwings.Client();
+
+client.login(secrets.email, secrets.password, (err, vehicle) => {
     if (err) {
         console.error(err);
         
         return err;
     }
     
-    console.log('Connected!');
+    console.log(vehicle);
 });
