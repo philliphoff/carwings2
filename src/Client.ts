@@ -1,3 +1,4 @@
+import { Api } from './Api';
 import { IVehicle } from './IVehicle';
 
 import * as crypto from 'crypto';
@@ -20,32 +21,22 @@ export class Client {
     }
 
     public connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
-        request.post({
-            url: Client.BASE_ENDPOINT + '/InitialApp.php',
-            form: {
-                'RegionCode': this._regionCode,
-                'lg': this._locale,
-                'initial_app_strings': Client.INITIAL_APP_STRINGS
-            }
-        },
-        (err, response, body) => {
-            if (err) {
-                return callback(err);
-            }
+        Api.connect(
+            this._regionCode,
+            this._locale,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
 
-            if (response.statusCode !== 200) {
-                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-            }
+                const passwordEncryptionKey = response.baseprm;
 
-            const parsedBody = JSON.parse(body);
-            const passwordEncryptionKey = parsedBody.baseprm;
+                if (!passwordEncryptionKey) {
+                    return callback(new Error('Response did not include password encryption key.'));
+                }
 
-            if (!passwordEncryptionKey) {
-                return callback(new Error('Response did not include password encryption key.'));
-            }
-
-            return callback(undefined, passwordEncryptionKey);
-        });
+                return callback(undefined, passwordEncryptionKey);
+            });
     }
 
     public login(userId: string, password: string, callback: (err?: Error, vehicle?: IVehicle) => void): void {
