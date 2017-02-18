@@ -51,7 +51,7 @@ export class Client {
                             undefined,
                             {
                                 vin: vehicleInfo.vin
-                        });
+                            });
                     });
             });
     }
@@ -108,6 +108,40 @@ export class Client {
                 };
 
                 setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+            });
+    }
+
+    public requestHvacOn(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestHvacOn(
+            that._regionCode,
+            that._customSessionId,
+            vin,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+                else {
+                    callback(undefined, response);
+                }
+            });
+    }
+
+    public requestHvacOff(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestHvacOff(
+            that._regionCode,
+            that._customSessionId,
+            vin,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+                else {
+                    callback(undefined, response);
+                }
             });
     }
 
@@ -172,7 +206,7 @@ export class Client {
 
     private static extractCustomerInfo(response): {
         timeZone: string
-    }{
+    } {
         const customerInfo = response.CustomerInfo;
 
         if (!customerInfo) {
@@ -196,7 +230,7 @@ export class Client {
         gdcUserId: string,
         dcmId: string,
         vin: string
-    }{
+    } {
         const vehicle = response.vehicle;
 
         if (!vehicle) {

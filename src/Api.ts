@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts" />
+
 import * as crypto from 'crypto';
 import * as request from 'request';
 
@@ -17,19 +19,19 @@ export class Api {
                 'lg': locale
             }
         },
-        (err, response, body) => {
-            if (err) {
-                return callback(err);
-            }
+            (err, response, body) => {
+                if (err) {
+                    return callback(err);
+                }
 
-            if (response.statusCode !== 200) {
-                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-            }
+                if (response.statusCode !== 200) {
+                    return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+                }
 
-            const parsedBody = JSON.parse(body);
+                const parsedBody = JSON.parse(body);
 
-            return callback(undefined, parsedBody);
-        });
+                return callback(undefined, parsedBody);
+            });
     }
 
     public static login(
@@ -52,19 +54,19 @@ export class Api {
                 'Password': encryptedPassword
             }
         },
-        (err, response, body) => {
-            if (err) {
-                return callback(err);
-            }
+            (err, response, body) => {
+                if (err) {
+                    return callback(err);
+                }
 
-            if (response.statusCode !== 200) {
-                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-            }
+                if (response.statusCode !== 200) {
+                    return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+                }
 
-            const parsedBody = JSON.parse(body);
+                const parsedBody = JSON.parse(body);
 
-            callback(undefined, parsedBody);
-        });
+                callback(undefined, parsedBody);
+            });
     }
 
     public static requestStatus(
@@ -89,19 +91,19 @@ export class Api {
                 'tz': timeZone
             }
         },
-        (err, response, body) => {
-            if (err) {
-                return callback(err);
-            }
+            (err, response, body) => {
+                if (err) {
+                    return callback(err);
+                }
 
-            if (response.statusCode !== 200) {
-                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
-            }
+                if (response.statusCode !== 200) {
+                    return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+                }
 
-            const parsedBody = JSON.parse(body);
+                const parsedBody = JSON.parse(body);
 
-            callback(undefined, parsedBody);
-        });
+                callback(undefined, parsedBody);
+            });
     }
 
     public static requestStatusResult(
@@ -125,8 +127,7 @@ export class Api {
                 'tz': timeZone,
                 'resultKey': resultKey
             }
-        },
-        (err, response, body) => {
+        }, (err, response, body) => {
             if (err) {
                 return callback(err);
             }
@@ -138,6 +139,60 @@ export class Api {
             const parsedBody = JSON.parse(body);
 
             callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestHvacOn(
+        regionCode: string,
+        customSessionId: string,
+        vin: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteRequest.php',
+            form: {
+                'RegionCode': regionCode,
+                'VIN': vin,
+                'custom_sessionid': customSessionId
+            }
+        }, (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            return callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestHvacOff(
+        regionCode: string,
+        customSessionId: string,
+        vin: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteOffRequest.php',
+            form: {
+                'RegionCode': regionCode,
+                'VIN': vin,
+                'custom_sessionid': customSessionId
+            }
+        }, (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            return callback(undefined, parsedBody);
         });
     }
 
