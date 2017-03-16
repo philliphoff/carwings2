@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 import * as request from 'request';
 
 export class Api {
-    private static BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/gworchest_0307C/gdc';
+    private static BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/gworchest_160803EC/gdc';
     private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
 
     public static connect(
