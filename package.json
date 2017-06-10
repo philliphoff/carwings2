@@ -1,8 +1,8 @@
 {
   "name": "carwings2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Node.js client library for the Nissan Leaf \"Carwings\" API",
-  "main": "sample/index.js",
+  "main": "release/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sirfergy/carwings2.git"
