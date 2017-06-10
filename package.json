@@ -2,24 +2,24 @@
   "name": "carwings2",
   "version": "1.0.1",
   "description": "A Node.js client library for the Nissan Leaf \"Carwings\" API",
-  "main": "release/index.js",
+  "main": "sample/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/philliphoff/carwings2.git"
+    "url": "git+https://github.com/sirfergy/carwings2.git"
   },
   "author": "Phillip Hoff",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/philliphoff/carwings2/issues"
+    "url": "https://github.com/sirfergy/carwings2/issues"
   },
-  "homepage": "https://github.com/philliphoff/carwings2#readme",
+  "homepage": "https://github.com/sirfergy/carwings2#readme",
   "devDependencies": {
-    "tslint": "^3.9.0",
-    "typescript": "^2.1.6",
-    "typings": "^0.8.1"
+    "tslint": "^5.4.3",
+    "typings": "^2.1.1",
+    "typescript": "^2.3.4"
   },
   "dependencies": {
-    "crypto": "^0.0.3",
-    "request": "^2.72.0"
+    "crypto": "0.0.3",
+    "request": "^2.81.0"
   }
 }
