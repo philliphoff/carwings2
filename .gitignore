@@ -35,11 +35,9 @@ node_modules
 # Source maps
 maps
 
-# Release directory
-release
-
 # Sample Secrets
 sample/secrets.json
+sample/*.js
 
 # TypeScript Definitions
 typings
