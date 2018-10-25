@@ -12,7 +12,7 @@ export class Client {
     private _timeZone: string;
 
     constructor(regionCode?: string, locale?: string) {
-        this._regionCode = regionCode || 'NNA'; // Default to North America
+        this._regionCode = regionCode || 'NE';
         this._locale = locale || 'en-US';       // Default to English (US)
     }
 
@@ -131,14 +131,7 @@ export class Client {
     }
 
     private static extractCustomSessionIdFromLoginResponse(response): string {
-        const vehicleInfoList = response.VehicleInfoList;
-
-        if (!vehicleInfoList) {
-            console.warn('Response did not include a vehicle information list.');
-            return;
-        };
-
-        const vehicleInfo = vehicleInfoList.vehicleInfo;
+        const vehicleInfo = response.vehicleInfo;
 
         if (!vehicleInfo) {
             console.warn('Response did not include vehicle information.');
