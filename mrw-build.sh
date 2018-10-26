@@ -10,6 +10,7 @@ if [ -f ~/.nvm/nvm.sh ]; then
   npm install babel-register
   npx -p touch nodetouch gulpfile.js
   gulp build -f gulpfile.babel.js
+  sudo npm link
 else
   echo "Install NVM so the script can install the correct version of nodejs"
 fi
