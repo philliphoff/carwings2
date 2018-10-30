@@ -111,6 +111,25 @@ export class Client {
             });
     }
 
+    public getClimateControl(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestClimateControlStatus(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+                callback(undefined, response);
+            });
+    }
+
     private connect(callback: (err?: Error, passwordEncryptionKey?: string) => void): void {
         Api.connect(
             this._regionCode,
