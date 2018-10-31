@@ -111,10 +111,159 @@ export class Client {
             });
     }
 
-    public getClimateControl(vin: string, callback: (err?: Error, status?) => void): void {
+    public getCachedStatus(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestCachedStatus(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(undefined, response);
+            });
+    }
+
+    public getClimateControlStatus(vin: string, callback: (err?: Error, status?) => void): void {
         const that = this;
 
         Api.requestClimateControlStatus(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+                callback(undefined, response);
+            });
+    }
+
+    public requestClimateControlTurnOn(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestClimateControlTurnOn(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                const resultKey = response.resultKey;
+
+                if (!resultKey) {
+                    return callback(new Error('Response did not include response key.'));
+                }
+
+                const onTimer = () => {
+                    Api.requestClimateControlTurnOnResult(
+                        that._regionCode,
+                        that._locale,
+                        that._customSessionId,
+                        that._dcmId,
+                        vin,
+                        that._timeZone,
+                        resultKey,
+                        (resultErr, resultResponse) => {
+                            if (resultErr) {
+                                return callback(resultErr);
+                            }
+
+                            const responseFlag = resultResponse.responseFlag;
+
+                            if (!responseFlag) {
+                                return callback(new Error('Response did not include response flag.'));
+                            }
+
+                            if (responseFlag === '0') {
+                                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+                            }
+                            else {
+                                callback(undefined, resultResponse);
+                            }
+                        });
+                };
+
+                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+            });
+    }
+
+    public requestClimateControlTurnOff(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestClimateControlTurnOff(
+            that._regionCode,
+            that._locale,
+            that._customSessionId,
+            that._dcmId,
+            that._gdcUserId,
+            vin,
+            that._timeZone,
+            (err, response) => {
+                if (err) {
+                    return callback(err);
+                }
+
+                const resultKey = response.resultKey;
+
+                if (!resultKey) {
+                    return callback(new Error('Response did not include response key.'));
+                }
+
+                const onTimer = () => {
+                    Api.requestClimateControlTurnOffResult(
+                        that._regionCode,
+                        that._locale,
+                        that._customSessionId,
+                        that._dcmId,
+                        vin,
+                        that._timeZone,
+                        resultKey,
+                        (resultErr, resultResponse) => {
+                            if (resultErr) {
+                                return callback(resultErr);
+                            }
+
+                            const responseFlag = resultResponse.responseFlag;
+
+                            if (!responseFlag) {
+                                return callback(new Error('Response did not include response flag.'));
+                            }
+
+                            if (responseFlag === '0') {
+                                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+                            }
+                            else {
+                                callback(undefined, resultResponse);
+                            }
+                        });
+                };
+
+                setTimeout(onTimer, Client.RESULT_POLLING_INTERVAL);
+            });
+    }
+
+    public requestChargingStart(vin: string, callback: (err?: Error, status?) => void): void {
+        const that = this;
+
+        Api.requestChargingStart(
             that._regionCode,
             that._locale,
             that._customSessionId,

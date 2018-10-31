@@ -141,6 +141,43 @@ export class Api {
         });
     }
 
+    public static requestCachedStatus(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        gdcUserId: string,
+        vin: string,
+        timeZone: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/BatteryStatusRecordsRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'UserId': gdcUserId,
+                'VIN': vin,
+                'tz': timeZone
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
     public static requestClimateControlStatus(
         regionCode: string,
         locale: string,
@@ -152,6 +189,191 @@ export class Api {
         callback: (err?: Error, response?) => void): void {
         request.post({
             url: Api.BASE_ENDPOINT + '/RemoteACRecordsRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'UserId': gdcUserId,
+                'VIN': vin,
+                'tz': timeZone
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestClimateControlTurnOn(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        gdcUserId: string,
+        vin: string,
+        timeZone: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'UserId': gdcUserId,
+                'VIN': vin,
+                'tz': timeZone
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestClimateControlTurnOnResult(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        vin: string,
+        timeZone: string,
+        resultKey: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteResult.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'VIN': vin,
+                'tz': timeZone,
+                'resultKey': resultKey
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestClimateControlTurnOff(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        gdcUserId: string,
+        vin: string,
+        timeZone: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteOffRequest.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'UserId': gdcUserId,
+                'VIN': vin,
+                'tz': timeZone
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestClimateControlTurnOffResult(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        vin: string,
+        timeZone: string,
+        resultKey: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/ACRemoteOffResult.php',
+            form: {
+                'initial_app_strings': Api.INITIAL_APP_STRINGS,
+                'RegionCode': regionCode,
+                'lg': locale,
+                'custom_sessionid': customSessionId,
+                'DCMID': dcmId,
+                'VIN': vin,
+                'tz': timeZone,
+                'resultKey': resultKey
+            }
+        },
+        (err, response, body) => {
+            if (err) {
+                return callback(err);
+            }
+
+            if (response.statusCode !== 200) {
+                return callback(new Error('Response was status code: ' + response.statusCode + ' (' + response.statusMessage + ')'));
+            }
+
+            const parsedBody = JSON.parse(body);
+
+            callback(undefined, parsedBody);
+        });
+    }
+
+    public static requestChargingStart(
+        regionCode: string,
+        locale: string,
+        customSessionId: string,
+        dcmId: string,
+        gdcUserId: string,
+        vin: string,
+        timeZone: string,
+        callback: (err?: Error, response?) => void): void {
+        request.post({
+            url: Api.BASE_ENDPOINT + '/BatteryRemoteChargingRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
