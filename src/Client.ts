@@ -39,6 +39,10 @@ export class Client {
                         that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response);
 
                         const customerInfo = Client.extractCustomerInfo(response);
+ 
+                        if (typeof customerInfo === "undefined") {
+                            return callback(new Error("Login failed"));
+                        }
 
                         that._timeZone = customerInfo.timeZone;
 
