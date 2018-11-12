@@ -303,6 +303,7 @@ export class Client {
     }
 
     private static extractCustomSessionIdFromLoginResponse(response, regionCode): string {
+        var vehicleInfo;
         if (regionCode === "NNA") {
             const vehicleInfoList = response.VehicleInfoList;
             if (!vehicleInfoList) {
@@ -310,9 +311,9 @@ export class Client {
                 return;
             };
 
-            const vehicleInfo = vehicleInfoList.vehicleInfo;
+            vehicleInfo = vehicleInfoList.vehicleInfo;
         } else { // NE region
-            const vehicleInfo = response.vehicleInfo;
+            vehicleInfo = response.vehicleInfo;
         }
 
         if (!vehicleInfo) {
