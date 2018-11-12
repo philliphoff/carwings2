@@ -36,7 +36,8 @@ export class Client {
                             return callback(err);
                         }
 
-                        that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response);
+                        console.log("Region code: " + that._regionCode);
+                        that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response, that._regionCode);
 
                         const customerInfo = Client.extractCustomerInfo(response);
  
@@ -302,8 +303,18 @@ export class Client {
             });
     }
 
-    private static extractCustomSessionIdFromLoginResponse(response): string {
-        const vehicleInfo = response.vehicleInfo;
+    private static extractCustomSessionIdFromLoginResponse(response, regionCode): string {
+        if (regionCode === "NNA") {
+            const vehicleInfoList = response.VehicleInfoList;
+            if (!vehicleInfoList) {
+                console.warn('Response did not include a vehicle information list.');
+                return;
+            };
+
+            const vehicleInfo = vehicleInfoList.vehicleInfo;
+        } else { // NE region
+            const vehicleInfo = response.vehicleInfo;
+        }
 
         if (!vehicleInfo) {
             console.warn('Response did not include vehicle information.');
