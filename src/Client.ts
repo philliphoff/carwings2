@@ -36,7 +36,6 @@ export class Client {
                             return callback(err);
                         }
 
-                        console.log("Region code: " + that._regionCode);
                         that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response, that._regionCode);
 
                         const customerInfo = Client.extractCustomerInfo(response);
