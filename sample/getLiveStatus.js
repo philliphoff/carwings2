@@ -1,9 +1,9 @@
-var carwings = require('carwings2-mrw');
-var fs = require("fs");
-const secrets = JSON.parse(fs.readFileSync(require('os').homedir() + "/nissan-leaf-secrets.json"));
+'use strict';
 
-// Create an instance of the client...
-var client = new carwings.Client("NE");
+const carwings = require('../release');
+const secrets = require('./secrets.json');
+
+const client = new carwings.Client();
 
 // Login using a user's Carwings (i.e. Nissan Connect) credentials...
 client.login(secrets.email, secrets.password, (err, vehicle) => {
