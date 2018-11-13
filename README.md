@@ -1,4 +1,4 @@
-# carwings2 (MRW Edited Fork - Works for EU cars)
+# carwings2
 A Node.js client library for the Nissan Leaf "Carwings" API.
 
 This library makes use of version "2" of the Carwings API.
