@@ -12,7 +12,7 @@ export class Client {
     private _timeZone: string;
 
     constructor(regionCode?: string, locale?: string) {
-        this._regionCode = regionCode || 'NE';
+        this._regionCode = regionCode || 'NNA'; // Default to North America
         this._locale = locale || 'en-US';       // Default to English (US)
     }
 
