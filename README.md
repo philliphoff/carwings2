@@ -58,7 +58,7 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
 
 > Client(regionCode, locale)
 
- - `regionCode` *(string, optional)*: The region in which the user resides. Defaults to `'NNA'` (United States).
+ - `regionCode` *(string, optional)*: The region in which the user resides. Defaults to `'NNA'` (United States). Use 'NE' to connect to the European endpoint.
  - `locale` *(string, optional)*: The locale (language) of the user. Defaults to `'en-US'` (English (United States)).
  
 > login(email, password, callback)
