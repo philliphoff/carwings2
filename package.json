@@ -1,5 +1,5 @@
 {
-  "name": "carwings2-mrw",
+  "name": "carwings2",
   "version": "2.0.0",
   "description": "A Node.js client library for the Nissan Leaf \"Carwings\" API",
   "main": "release/Index.js",
@@ -20,7 +20,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-es2015": "^6.24.1",
     "del": "^2.2.2",
-    "gulp": "~3.9.1",
+    "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-tslint": "^5.0.0",
     "gulp-typescript": "^2.14.1",
