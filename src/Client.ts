@@ -309,7 +309,7 @@ export class Client {
             if (!vehicleInfoList) {
                 console.warn('Response did not include a vehicle information list.');
                 return;
-            };
+            }
 
             vehicleInfo = vehicleInfoList.vehicleInfo;
         } else { // NE region
