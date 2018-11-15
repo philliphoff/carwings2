@@ -18,8 +18,10 @@ gulp.task('clean', ['clean-typescript']);
 gulp.task('lint-typescript', () => {
     return gulp
         .src(directories.source + '/**/*.ts')
-        .pipe(tslint())
-        .pipe(tslint.report('verbose'));
+        .pipe(tslint({
+            formatter: 'verbose'
+        }))
+        .pipe(tslint.report());
 });
 
 gulp.task('lint', ['lint-typescript']);
@@ -30,7 +32,7 @@ gulp.task('build-typescript', ['clean-typescript'], () => {
         tsProject
             .src()
             .pipe(sourcemaps.init())
-            .pipe(ts(tsProject));
+            .pipe(tsProject());
 
     return tsResult
         .js
