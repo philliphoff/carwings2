@@ -37,6 +37,3 @@ maps
 
 # Sample Secrets
 sample/secrets.json
-
-# TypeScript Definitions
-typings
