@@ -304,7 +304,7 @@ export class Client {
 
     private static extractCustomSessionIdFromLoginResponse(response, regionCode): string {
         var vehicleInfo;
-        if (regionCode === "NNA") {
+        if (response.hasOwnProperty('VehicleInfoList')) {
             const vehicleInfoList = response.VehicleInfoList;
             if (!vehicleInfoList) {
                 console.warn('Response did not include a vehicle information list.');
@@ -312,7 +312,7 @@ export class Client {
             }
 
             vehicleInfo = vehicleInfoList.vehicleInfo;
-        } else { // NE region
+        } else {
             vehicleInfo = response.vehicleInfo;
         }
 
