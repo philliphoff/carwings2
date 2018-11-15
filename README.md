@@ -72,6 +72,31 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
  - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
  - `callback` *(function)*: Invoked on completion of the request.
 
+> getCachedStatus(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> getClimateControlStatus(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestClimateControlTurnOn(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestClimateControlTurnOff(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestChargingStart(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
 Note: This call can take upwards of several minutes to complete.
 
 ## Acknowledgements
