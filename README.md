@@ -58,7 +58,7 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
 
 > Client(regionCode, locale)
 
- - `regionCode` *(string, optional)*: The region in which the user resides. Defaults to `'NNA'` (United States).
+ - `regionCode` *(string, optional)*: The region in which the user resides. Defaults to `'NNA'` (United States). Use 'NE' to connect to the European endpoint.
  - `locale` *(string, optional)*: The locale (language) of the user. Defaults to `'en-US'` (English (United States)).
  
 > login(email, password, callback)
@@ -73,6 +73,31 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
  - `callback` *(function)*: Invoked on completion of the request.
 
 Note: This call can take upwards of several minutes to complete.
+
+> getCachedStatus(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> getClimateControlStatus(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestClimateControlTurnOn(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestClimateControlTurnOff(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
+
+> requestChargingStart(vin, callback)
+
+ - `vin` *(string)*: The VIN of the user's vehicle (e.g. provided to the `login()` callback).
+ - `callback` *(function)*: Invoked on completion of the request.
 
 ## Acknowledgements
 
