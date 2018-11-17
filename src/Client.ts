@@ -39,9 +39,9 @@ export class Client {
                         that._customSessionId = Client.extractCustomSessionIdFromLoginResponse(response, that._regionCode);
 
                         const customerInfo = Client.extractCustomerInfo(response);
- 
-                        if (typeof customerInfo === "undefined") {
-                            return callback(new Error("Login failed"));
+
+                        if (typeof customerInfo === 'undefined') {
+                            return callback(new Error('Login failed'));
                         }
 
                         that._timeZone = customerInfo.timeZone;
@@ -303,7 +303,7 @@ export class Client {
     }
 
     private static extractCustomSessionIdFromLoginResponse(response, regionCode): string {
-        var vehicleInfo;
+        let vehicleInfo;
         if (response.hasOwnProperty('VehicleInfoList')) {
             const vehicleInfoList = response.VehicleInfoList;
             if (!vehicleInfoList) {
