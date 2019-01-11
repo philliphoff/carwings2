@@ -3,7 +3,7 @@ import * as request from 'request';
 
 export class Api {
     private static NNA_BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/gworchest_160803EC/gdc';
-    private static NE_BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/api_v180117_NE/gdc';
+    private static NE_BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/api_v181217_NE/gdc';
     private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
 
     private static getBaseEndpoint(regionCode: string) {
