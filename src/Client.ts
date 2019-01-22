@@ -12,10 +12,13 @@ export class Client {
     private _timeZone: string;
     private _urlOverride: string;
 
-    constructor(regionCode?: string, locale?: string, urlOverride?: string) {
-        this._regionCode = regionCode || 'NNA'; // Default to North America
-        this._locale = locale || 'en-US';       // Default to English (US)
-        this._urlOverride = urlOverride;        // Default to undefined
+    constructor(options?: {regionCode?: string, locale?: string, urlOverride?: string}) {
+        if (typeof options === 'undefined') {
+            options = {};
+        }
+        this._regionCode = options.regionCode || 'NNA'; // Default to North America
+        this._locale = options.locale || 'en-US';       // Default to English (US)
+        this._urlOverride = options.urlOverride;        // Default to undefined
     }
 
     public login(userId: string, password: string, callback: (err?: Error, vehicle?: IVehicle) => void): void {
