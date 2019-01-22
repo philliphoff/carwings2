@@ -10,15 +10,15 @@ export class Client {
     private _locale: string;
     private _regionCode: string;
     private _timeZone: string;
-    private _urlOverride: string;
+    private _baseEndpoint: string;
 
-    constructor(options?: {regionCode?: string, locale?: string, urlOverride?: string}) {
+    constructor(options?: {regionCode?: string, locale?: string, baseEndpoint?: string}) {
         if (typeof options === 'undefined') {
             options = {};
         }
         this._regionCode = options.regionCode || 'NNA'; // Default to North America
         this._locale = options.locale || 'en-US';       // Default to English (US)
-        this._urlOverride = options.urlOverride;        // Default to undefined
+        this._baseEndpoint = options.baseEndpoint;      // Default to undefined
     }
 
     public login(userId: string, password: string, callback: (err?: Error, vehicle?: IVehicle) => void): void {
@@ -36,7 +36,7 @@ export class Client {
                     userId,
                     password,
                     passwordEncryptionKey,
-                    that._urlOverride,
+                    that._baseEndpoint,
                     (err, response) => {
                         if (err) {
                             return callback(err);
@@ -77,7 +77,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -98,7 +98,7 @@ export class Client {
                         vin,
                         that._timeZone,
                         resultKey,
-                        that._urlOverride,
+                        that._baseEndpoint,
                         (resultErr, resultResponse) => {
                             if (resultErr) {
                                 return callback(resultErr);
@@ -134,7 +134,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -155,7 +155,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -175,7 +175,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -196,7 +196,7 @@ export class Client {
                         vin,
                         that._timeZone,
                         resultKey,
-                        that._urlOverride,
+                        that._baseEndpoint,
                         (resultErr, resultResponse) => {
                             if (resultErr) {
                                 return callback(resultErr);
@@ -232,7 +232,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -253,7 +253,7 @@ export class Client {
                         vin,
                         that._timeZone,
                         resultKey,
-                        that._urlOverride,
+                        that._baseEndpoint,
                         (resultErr, resultResponse) => {
                             if (resultErr) {
                                 return callback(resultErr);
@@ -289,7 +289,7 @@ export class Client {
             that._gdcUserId,
             vin,
             that._timeZone,
-            that._urlOverride,
+            that._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
@@ -302,7 +302,7 @@ export class Client {
         Api.connect(
             this._regionCode,
             this._locale,
-            this._urlOverride,
+            this._baseEndpoint,
             (err, response) => {
                 if (err) {
                     return callback(err);
