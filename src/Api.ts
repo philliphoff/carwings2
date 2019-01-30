@@ -7,7 +7,7 @@ export class Api {
     private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
 
     private static getBaseEndpoint(regionCode: string, baseEndpoint?: string) {
-        if (typeof baseEndpoint !== 'undefined') {
+        if (baseEndpoint) {
             return baseEndpoint;
         } else {
             return (regionCode === 'NNA' ? Api.NNA_BASE_ENDPOINT : Api.NE_BASE_ENDPOINT);
