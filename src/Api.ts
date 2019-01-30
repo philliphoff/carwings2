@@ -6,16 +6,21 @@ export class Api {
     private static NE_BASE_ENDPOINT = 'https://gdcportalgw.its-mo.com/api_v181217_NE/gdc';
     private static INITIAL_APP_STRINGS = 'geORNtsZe5I4lRGjG9GZiA';
 
-    private static getBaseEndpoint(regionCode: string) {
-        return (regionCode === 'NNA' ? Api.NNA_BASE_ENDPOINT : Api.NE_BASE_ENDPOINT);
+    private static getBaseEndpoint(regionCode: string, baseEndpoint?: string) {
+        if (baseEndpoint) {
+            return baseEndpoint;
+        } else {
+            return (regionCode === 'NNA' ? Api.NNA_BASE_ENDPOINT : Api.NE_BASE_ENDPOINT);
+        }
     }
 
     public static connect(
         regionCode: string,
         locale: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/InitialApp.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/InitialApp.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -43,12 +48,13 @@ export class Api {
         userId: string,
         password: string,
         passwordEncryptionKey: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
 
         const encryptedPassword = Api.encryptPassword(password, passwordEncryptionKey);
 
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/UserLoginRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/UserLoginRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -80,9 +86,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/BatteryStatusCheckRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/BatteryStatusCheckRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -117,9 +124,10 @@ export class Api {
         vin: string,
         timeZone: string,
         resultKey: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/BatteryStatusCheckResultRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/BatteryStatusCheckResultRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -154,9 +162,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/BatteryStatusRecordsRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/BatteryStatusRecordsRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -191,9 +200,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/RemoteACRecordsRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/RemoteACRecordsRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -228,9 +238,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/ACRemoteRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/ACRemoteRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -265,9 +276,10 @@ export class Api {
         vin: string,
         timeZone: string,
         resultKey: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/ACRemoteResult.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/ACRemoteResult.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -302,9 +314,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/ACRemoteOffRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/ACRemoteOffRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -339,9 +352,10 @@ export class Api {
         vin: string,
         timeZone: string,
         resultKey: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/ACRemoteOffResult.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/ACRemoteOffResult.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,
@@ -376,9 +390,10 @@ export class Api {
         gdcUserId: string,
         vin: string,
         timeZone: string,
+        baseEndpoint: string,
         callback: (err?: Error, response?) => void): void {
         request.post({
-            url: Api.getBaseEndpoint(regionCode) + '/BatteryRemoteChargingRequest.php',
+            url: Api.getBaseEndpoint(regionCode, baseEndpoint) + '/BatteryRemoteChargingRequest.php',
             form: {
                 'initial_app_strings': Api.INITIAL_APP_STRINGS,
                 'RegionCode': regionCode,

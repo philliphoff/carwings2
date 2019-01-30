@@ -56,10 +56,13 @@ client.login(secrets.email, secrets.password, (err, vehicle) => {
 
 ### Client
 
-> Client(regionCode, locale)
+> Client(options)
+ - `options` *(object, optional)*: An options object you can use to configure the client's settings.
 
+You can set the following fields on the options parameter:
  - `regionCode` *(string, optional)*: The region in which the user resides. Defaults to `'NNA'` (United States). Use 'NE' to connect to the European endpoint.
  - `locale` *(string, optional)*: The locale (language) of the user. Defaults to `'en-US'` (English (United States)).
+ - `baseEndpoint` *(string, optional)*: The API endpoint to connect to. If `baseEndpoint` isn't specified the default API endpoint for the specified `regionCode` will be used.
  
 > login(email, password, callback)
 
